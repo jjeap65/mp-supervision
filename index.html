@@ -227,10 +227,10 @@ function setSyncState(state, msg) {
 async function cargarDesdeNube() {
   setSyncState('syncing','Cargando desde la nube...');
   try {
-    const res = await fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': API_KEY } });
+    // Bin público: GET sin header de autenticación (evita preflight CORS)
+    const res = await fetch(BIN_URL + '/latest?meta=false');
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const record = data.record || {};
+    const record = await res.json();
     regs   = record.regs   || {};
     extras = record.extras || [];
     equipos = [...PROGRAMA.actividades, ...extras];
